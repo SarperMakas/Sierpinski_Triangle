@@ -27,7 +27,7 @@ class Main:
         self.radius = 1
         self.current_pos = (0, 0)
         self._add_circle = self.add_circle()
-        self.iter_num = 25
+        self.iter_num = 1
     
     def event(self):
         """Main event loop"""
@@ -88,9 +88,10 @@ class Main:
     
     def draw(self):
         """Main draw method"""
-        
-        for _ in range(self.iter_num):
-            next(self._add_circle)
+
+        if self.run_simulation:
+            for _ in range(self.iter_num):
+                next(self._add_circle)
 
         pygame.display.flip()
 
