@@ -13,15 +13,14 @@ class Main:
         self.screen = pygame.display.set_mode((self.width, self.height))
         pygame.display.set_caption("Sierpinski Triangle")
 
-
         self.run: bool = True
         self.run_simulation: bool = False
         self.positions = []
 
         self.clock = pygame.time.Clock()
-        self.fps: int = 10
+        self.fps: int = 200
 
-        self.num_edges = 6
+        self.num_edges = 3
         self.n = 1/2
         self.radius = 1
         self.iter_num = 1
@@ -30,7 +29,6 @@ class Main:
         self.color = (255, 255, 255)
         self.current_pos = (0, 0)
         self._add_circle = self.add_circle()
-        
     
     def event(self):
         """Main event loop"""
@@ -49,16 +47,13 @@ class Main:
     def main(self):
         """Main game loop"""
         self.draw_circles(self.width//2, self.height//2)
-        self.current_pos = self.choose_point(self.positions[0], self.positions[1], self.n)
-
-        pygame.draw.circle(self.screen, self.color, self.rand_point_from_edges(), self.radius)
-
+        self.current_pos = self.choose_point(self.positions[0], self.positions[1])
+        
         while self.run:
             self.event()
             self.draw()
 
             self.clock.tick(self.fps)
-
 
     def angles(self, edge_num: int = 3):
         """Angles"""
@@ -76,10 +71,11 @@ class Main:
             self.positions.append((x2, y2))
             pygame.draw.circle(self.screen, self.color, (x2, y2), self.radius)
     
-    def choose_point(self, p1, p2, n):
+    def choose_point(self, p1, p2):
         """returns mid point of the two positions"""
-        return abs(p1[0]-p2[0])*n, abs(p1[1]-p2[1])*n
-    
+        # return abs(p1[0]-p2[0])*n, abs(p1[1]-p2[1])*n
+        return abs(p1[0]+p2[0])*self.n, abs(p1[1]+p2[1])*self.n
+
     def rand_point_from_edges(self):
         """Choose random position from edges"""
         points = []
@@ -87,8 +83,8 @@ class Main:
         positions.append(self.positions[0])
 
         for i, pos in enumerate(positions):
-            point = self.choose_point(pos, self.positions[i], random.random())
-            points.append(point)    
+            point = self.choose_point(pos, self.positions[i])
+            points.append(point)
             pygame.draw.circle(self.screen, self.color, point, self.radius)
 
         return random.choice(points)
@@ -98,13 +94,11 @@ class Main:
 
         while True:
             pos = random.choice(self.positions)
-            mid = self.choose_point(self.current_pos, pos, self.n)
+            mid = self.choose_point(self.current_pos, pos)
             self.current_pos = mid
             pygame.draw.circle(self.screen, self.color, (mid[0], mid[1]), self.radius)
             yield
             
-
-    
     def draw(self):
         """Main draw method"""
 
